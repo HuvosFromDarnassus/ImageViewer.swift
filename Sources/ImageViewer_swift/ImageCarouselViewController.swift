@@ -196,18 +196,17 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
     }
     
     private func setupBottomButtons() {
-        guard let targetView else { return }
         [leftBottomButton, rightBottomButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
 
         NSLayoutConstraint.activate([
-            leftBottomButton.leadingAnchor.constraint(equalTo: targetView.leadingAnchor, constant: 20),
-            leftBottomButton.bottomAnchor.constraint(equalTo: targetView.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            leftBottomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            leftBottomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
 
-            rightBottomButton.trailingAnchor.constraint(equalTo: targetView.trailingAnchor, constant: -20),
-            rightBottomButton.bottomAnchor.constraint(equalTo: targetView.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            rightBottomButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            rightBottomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
     }
 
