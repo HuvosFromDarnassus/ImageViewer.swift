@@ -38,6 +38,8 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
     var options:[ImageViewerOption] = []
     
     private var onRightNavBarTapped:((Int) -> Void)?
+    private var onLeftBottomAction: (() -> Void)?
+    private var onRightBottomAction: (() -> Void)?
     
     private(set) lazy var navBar:UINavigationBar = {
         let _navBar = UINavigationBar(frame: .zero)
@@ -52,6 +54,23 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
         _v.backgroundColor = theme.color
         _v.alpha = 1.0
         return _v
+    }()
+    
+    private lazy var leftBottomButton: UIButton = {
+        let button = UIButton()
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        button.titleLabel?.textColor = .white
+        button.addTarget(self, action: #selector(didTapLeftBottomButton), for: .touchUpInside)
+        button.isHidden = true
+        return button
+    }()
+    private lazy var rightBottomButton: UIButton = {
+        let button = UIButton()
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        button.titleLabel?.textColor = .white
+        button.addTarget(self, action: #selector(didTapRightBottomButton), for: .touchUpInside)
+        button.isHidden = true
+        return button
     }()
     
     private(set) lazy var navItem = UINavigationItem()
@@ -144,6 +163,14 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
                         target: self,
                         action: #selector(diTapRightNavBarItem(_:)))
                     onRightNavBarTapped = onTap
+            case .leftBottomAction(let title, onTap: let onTap):
+                onLeftBottomAction = onTap
+                leftBottomButton.setTitle(title, for: .normal)
+                leftBottomButton.isHidden = false
+            case .rightBottomAction(let title, onTap: let onTap):
+                onRightBottomAction = onTap
+                rightBottomButton.setTitle(title, for: .normal)
+                rightBottomButton.isHidden = false
             }
         }
     }
@@ -164,6 +191,24 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
                 imageLoader: imageLoader)
             setViewControllers([initialVC], direction: .forward, animated: true)
         }
+        
+        setupBottomButtons()
+    }
+    
+    private func setupBottomButtons() {
+        guard let targetView else { return }
+        [leftBottomButton, rightBottomButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+
+        NSLayoutConstraint.activate([
+            leftBottomButton.leadingAnchor.constraint(equalTo: targetView.leadingAnchor, constant: 20),
+            leftBottomButton.bottomAnchor.constraint(equalTo: targetView.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+
+            rightBottomButton.trailingAnchor.constraint(equalTo: targetView.trailingAnchor, constant: -20),
+            rightBottomButton.bottomAnchor.constraint(equalTo: targetView.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+        ])
     }
 
     @objc
@@ -181,6 +226,16 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
             let _firstVC = viewControllers?.first as? ImageViewerController
             else { return }
         onTap(_firstVC.index)
+    }
+    
+    @objc
+    private func didTapLeftBottomButton() {
+        onLeftBottomAction?()
+    }
+    
+    @objc
+    private func didTapRightBottomButton() {
+        onRightBottomAction?()
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {
