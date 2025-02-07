@@ -240,6 +240,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
               let _firstVC = viewControllers?.first as? ImageViewerController else {
             return
         }
+        dismiss(animated: true)
         onTap(_firstVC.index)
     }
     
@@ -249,6 +250,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
               let _firstVC = viewControllers?.first as? ImageViewerController else {
             return
         }
+        dismiss(animated: true)
         onTap(_firstVC.index)
     }
     
