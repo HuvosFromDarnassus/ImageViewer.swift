@@ -218,7 +218,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
 
     @objc
     private func dismiss(_ sender:UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
     
     deinit {
@@ -231,6 +231,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
               let _firstVC = viewControllers?.first as? ImageViewerController else {
             return
         }
+        dismiss(animated: true)
         onTap(_firstVC.index)
     }
     
