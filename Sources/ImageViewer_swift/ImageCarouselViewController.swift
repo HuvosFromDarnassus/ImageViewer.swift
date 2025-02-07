@@ -30,6 +30,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
     var theme:ImageViewerTheme = .light {
         didSet {
             navItem.leftBarButtonItem?.tintColor = theme.tintColor
+            navItem.rightBarButtonItem?.tintColor = theme.tintColor
             backgroundView?.backgroundColor = theme.color
         }
     }
@@ -38,8 +39,8 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
     var options:[ImageViewerOption] = []
     
     private var onRightNavBarTapped:((Int) -> Void)?
-    private var onLeftBottomAction: (() -> Void)?
-    private var onRightBottomAction: (() -> Void)?
+    private var onLeftBottomAction: ((Int) -> Void)?
+    private var onRightBottomAction: ((Int) -> Void)?
     
     private(set) lazy var navBar:UINavigationBar = {
         let _navBar = UINavigationBar(frame: .zero)
@@ -154,14 +155,14 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
                         title: title,
                         style: .plain,
                         target: self,
-                        action: #selector(diTapRightNavBarItem(_:)))
+                        action: #selector(didTapRightNavBarItem(_:)))
                     onRightNavBarTapped = onTap
                 case .rightNavItemIcon(let icon, let onTap):
                     navItem.rightBarButtonItem = UIBarButtonItem(
                         image: icon,
                         style: .plain,
                         target: self,
-                        action: #selector(diTapRightNavBarItem(_:)))
+                        action: #selector(didTapRightNavBarItem(_:)))
                     onRightNavBarTapped = onTap
             case .leftBottomAction(let title, onTap: let onTap):
                 onLeftBottomAction = onTap
@@ -223,21 +224,30 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
     }
     
     @objc
-    func diTapRightNavBarItem(_ sender:UIBarButtonItem) {
+    func didTapRightNavBarItem(_ sender:UIBarButtonItem) {
         guard let onTap = onRightNavBarTapped,
-            let _firstVC = viewControllers?.first as? ImageViewerController
-            else { return }
+              let _firstVC = viewControllers?.first as? ImageViewerController else {
+            return
+        }
         onTap(_firstVC.index)
     }
     
     @objc
     private func didTapLeftBottomButton() {
-        onLeftBottomAction?()
+        guard let onTap = onLeftBottomAction,
+              let _firstVC = viewControllers?.first as? ImageViewerController else {
+            return
+        }
+        onTap(_firstVC.index)
     }
     
     @objc
     private func didTapRightBottomButton() {
-        onRightBottomAction?()
+        guard let onTap = onRightBottomAction,
+              let _firstVC = viewControllers?.first as? ImageViewerController else {
+            return
+        }
+        onTap(_firstVC.index)
     }
     
     override public var preferredStatusBarStyle: UIStatusBarStyle {
