@@ -156,6 +156,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
                         style: .plain,
                         target: self,
                         action: #selector(didTapRightNavBarItem(_:)))
+                    navItem.rightBarButtonItem?.tintColor = theme.tintColor
                     onRightNavBarTapped = onTap
                 case .rightNavItemIcon(let icon, let onTap):
                     navItem.rightBarButtonItem = UIBarButtonItem(
@@ -163,6 +164,7 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
                         style: .plain,
                         target: self,
                         action: #selector(didTapRightNavBarItem(_:)))
+                    navItem.rightBarButtonItem?.tintColor = theme.tintColor
                     onRightNavBarTapped = onTap
             case .leftBottomAction(let title, onTap: let onTap):
                 onLeftBottomAction = onTap
