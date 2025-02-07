@@ -199,9 +199,10 @@ public class ImageCarouselViewController:UIPageViewController, ImageViewerTransi
         [leftBottomButton, rightBottomButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
-            $0.bindFrameToSuperview()
-            view.sendSubviewToBack($0)
         }
+
+        view.bringSubviewToFront(leftBottomButton)
+        view.bringSubviewToFront(rightBottomButton)
 
         NSLayoutConstraint.activate([
             leftBottomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
